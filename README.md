@@ -87,10 +87,10 @@ CREATE TABLE `platillos` (
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
 | GET | `/platillos` | Obtener todos los platillos |
-| GET | `/platillo/:id` | Obtener un platillo específico |
+| GET | `/platillo/id` | Obtener un platillo específico |
 | POST | `/platillos` | Crear un nuevo platillo |
-| PUT | `/platillo/:id` | Actualizar un platillo existente |
-| DELETE | `/platillo/:id` | Eliminar un platillo |
+| PUT | `/platillo/id` | Actualizar un platillo existente |
+| DELETE | `/platillo/id` | Eliminar un platillo |
 
 ## Funcionalidades del Frontend
 
