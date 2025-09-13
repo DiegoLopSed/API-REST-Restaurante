@@ -5,7 +5,7 @@ import { verificar } from "../Middleware/Auth.js";
 const router = Router();
 
 // Rutas públicas (no requieren autenticación)
-router.get('/platillos',verificar, getPlatillos);
+router.get('/platillos', getPlatillos);
 router.get('/platillo/:id', getPlatillo);
 
 // Rutas protegidas (requieren token de autenticación)
