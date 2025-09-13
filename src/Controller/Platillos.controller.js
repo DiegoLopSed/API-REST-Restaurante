@@ -3,7 +3,7 @@ import { connection } from '../db.js'
 export const getPlatillos = async (req, res) => {
 
     try {
-        const consulta = "SELECT id, nombre, descripcion, precio, imagen FROM makis"
+        const consulta = "SELECT id, nombre, precio, imagen FROM platillos"
         const [rows] = await connection.query(consulta);
         console.log('Platillos obtenidos:', rows.length, 'elementos');
         console.log('Primer platillo:', rows[0]);
@@ -19,7 +19,7 @@ export const getPlatillos = async (req, res) => {
 export const getPlatillo = async (req, res) => {
     try {
         const { id } = req.params;
-        const consulta = "SELECT id, nombre, descripcion, precio, imagen FROM makis WHERE id = ?";
+        const consulta = "SELECT id, nombre, precio, imagen FROM platillos WHERE id = ?";
         const [rows] = await connection.query(consulta, [id]);
         return res.json(rows);
     } catch (error) {
@@ -34,12 +34,12 @@ export const savePlatillo = async (req, res) => {
         // Obtener el nombre del archivo de imagen subido
         const imagen = req.file ? `/img/${req.file.filename}` : null;
         
-        const consulta = "INSERT INTO makis (nombre, descripcion, precio, imagen) VALUES (?, ?, ?, ?)";
-        await connection.query(consulta, [nombre, descripcion, precio, imagen]);
+        const consulta = "INSERT INTO platillos (nombre, precio, imagen) VALUES (?, ?, ?)";
+        await connection.query(consulta, [nombre, precio, imagen]);
         
         return res.status(201).json({ 
             message: 'Platillo Guardado',
-            platillo: { nombre, descripcion, precio, imagen }
+            platillo: { nombre, precio, imagen }
         });
     } catch (error) {
         console.error('Error al guardar platillo:', error);
@@ -51,7 +51,7 @@ export const savePlatillo = async (req, res) => {
 export const deletePlatillo = async (req, res) => {
     try {
         const { id } = req.params;
-        const consulta = "DELETE FROM makis WHERE id = ?";
+        const consulta = "DELETE FROM platillos WHERE id = ?";
         const [result] = await connection.query(consulta, [id]);
 
         if (result.affectedRows === 0) {
@@ -67,10 +67,10 @@ export const deletePlatillo = async (req, res) => {
 export const updatePlatillo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre, descripcion, precio } = req.body;
+        const { nombre, precio, imagen } = req.body;
         
-            let consulta = "UPDATE makis SET nombre = ?, descripcion = ?, precio = ?";
-        let params = [nombre, descripcion, precio];
+            let consulta = "UPDATE platillos SET nombre = ?, precio = ?, imagen = ?";
+        let params = [nombre, precio, imagen];
         
         // Si se subió una nueva imagen, incluirla en la actualización
         if (req.file) {

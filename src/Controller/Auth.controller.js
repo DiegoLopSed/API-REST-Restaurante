@@ -4,11 +4,11 @@ import { connection } from "../db.js";
 import { JWT_SECRET, JWT_EXPIRES } from "../config.js";
 
 // Función de validación
-const validar = (nombre, correo, password) => {
-    if (!nombre || nombre.trim() === '') {
+const validar = (name, email, password) => {
+    if (!name || name.trim() === '') {
         return 'El nombre es requerido';
     }
-    if (!correo || correo.trim() === '') {
+    if (!email || email.trim() === '') {
         return 'El correo es requerido';
     }
     if (!password || password.trim() === '') {
@@ -19,7 +19,7 @@ const validar = (nombre, correo, password) => {
     }
     // Validación básica de email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(correo)) {
+    if (!emailRegex.test(email)) {
         return 'El formato del correo no es válido';
     }
     return '';
@@ -28,16 +28,16 @@ const validar = (nombre, correo, password) => {
 // Función para crear usuario
 const crearUsuario = async (req, res) => {
     try {
-        const { nombre, correo, password } = req.body;
+        const { name, email, password } = req.body;
         
         // Validar datos de entrada
-        var validacion = validar(nombre, correo, password);
+        var validacion = validar(name, email, password);
         
         if (validacion == '') {
             // Verificar si el usuario ya existe
             const [existingUser] = await connection.execute(
                 'SELECT id FROM usuarios WHERE email = ?', 
-                [correo]
+                [email]
             );
             
             if (existingUser.length > 0) {
@@ -53,7 +53,7 @@ const crearUsuario = async (req, res) => {
             // Crear nuevo usuario en MySQL
             const [result] = await connection.execute(
                 'INSERT INTO usuarios (name, email, password) VALUES (?, ?, ?)',
-                [nombre, correo, pass]
+                [name, email, pass]
             );
             
             return res.status(200).json({
@@ -79,9 +79,9 @@ const crearUsuario = async (req, res) => {
 // Función para login
 const loginUsuario = async (req, res) => {
     try {
-        const { correo, password } = req.body;
+        const { email, password } = req.body;
         
-        if (!correo || !password) {
+        if (!email || !password) {
             return res.status(400).json({
                 status: false,
                 message: 'Correo y contraseña son requeridos'
@@ -91,7 +91,7 @@ const loginUsuario = async (req, res) => {
         // Buscar usuario por correo
         const [users] = await connection.execute(
             'SELECT * FROM usuarios WHERE email = ?',
-            [correo]
+            [email]
         );
         
         if (users.length === 0) {
